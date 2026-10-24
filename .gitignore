@@ -1,0 +1,8 @@
+target/
+.idea/
+*.iml
+.vscode/
+settings-ci.xml
+build.env
+reports/
+*.pem
