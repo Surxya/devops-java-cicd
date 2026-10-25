@@ -78,16 +78,8 @@ EOF
                 sshagent(['tomcat-ssh-key']) {
                     sh '''
                         mkdir -p ~/.ssh
-                        ssh-keyscan -H ${TOMCAT_HOST} >> ~/.ssh/known_hosts
-
-                        WAR=$(ls target/*.war | head -n 1)
-                        scp "$WAR" ubuntu@${TOMCAT_HOST}:/tmp/ROOT.war
-
-                        ssh ubuntu@${TOMCAT_HOST} '
-                            sudo rm -rf /opt/tomcat/webapps/ROOT /opt/tomcat/webapps/ROOT.war &&
-                            sudo mv /tmp/ROOT.war /opt/tomcat/webapps/ROOT.war &&
-                            sudo chown tomcat:tomcat /opt/tomcat/webapps/ROOT.war
-                        '
+                        ssh-keyscan -H ${TOMCAT_HOST} >> ~/.ssh/known_hosts 2>/devool || true
+                        scp -o StrictHostKeyChecking=no target/devops-demo.war ubuntu@${TOMCAT_HOST}:/opt/tomcat/webapps/ROOT.war
                     '''
                 }
             }
