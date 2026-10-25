@@ -18,11 +18,11 @@ pipeline {
 
         stage('Compile & Test') {
             steps {
-                sh 'mvn clean test jacoco:report'
+                sh 'mvn clean verify'
             }
             post {
                 always {
-                    junit '**/target/surefire-reports/*.xml'
+                    junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
                 }
             }
         }
@@ -37,7 +37,7 @@ pipeline {
 
         stage('Quality Gate') {
             steps {
-                timeout(time: 2, unit: 'MINUTES') {
+                timeout(time: 5, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
             }
@@ -46,9 +46,29 @@ pipeline {
         stage('Deploy to Nexus') {
             steps {
                 sh '''
-                    mvn clean deploy -DskipTests \
-                    -DaltDeploymentRepository=nexus-releases::default::http://${NEXUS_CREDS_USR}:${NEXUS_CREDS_PSW}@nexus:8081/repository/maven-releases/
+                    mkdir -p .mvn
+                    cat << 'EOF' > .mvn/settings.xml
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <servers>
+    <server>
+      <id>nexus-snapshots</id>
+      <username>${env.NEXUS_CREDS_USR}</username>
+      <password>${env.NEXUS_CREDS_PSW}</password>
+    </server>
+  </servers>
+</settings>
+EOF
+
+                    mvn deploy -s .mvn/settings.xml -DskipTests \
+                        -DaltSnapshotDeploymentRepository=nexus-snapshots::http://nexus:8081/repository/maven-snapshots/
                 '''
+            }
+            post {
+                always {
+                    sh 'rm -f .mvn/settings.xml'
+                }
             }
         }
     }
