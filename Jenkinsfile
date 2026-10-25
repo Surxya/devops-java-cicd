@@ -7,7 +7,7 @@ pipeline {
 
     environment {
         NEXUS_CREDS = credentials('nexus-creds')
-        TOMCAT_HOST = '<tomcat-private-ip>'
+        TOMCAT_HOST = '172.31.29.203'
     }
 
     stages {
@@ -61,7 +61,6 @@ pipeline {
   </servers>
 </settings>
 EOF
-
                     mvn deploy -s .mvn/settings.xml -DskipTests \
                         -DaltSnapshotDeploymentRepository=nexus-snapshots::http://nexus:8081/repository/maven-snapshots/
                 '''
@@ -77,9 +76,7 @@ EOF
             steps {
                 sshagent(['tomcat-ssh-key']) {
                     sh '''
-                        mkdir -p ~/.ssh
-                        ssh-keyscan -H ${TOMCAT_HOST} >> ~/.ssh/known_hosts 2>/devool || true
-                        scp -o StrictHostKeyChecking=no target/devops-demo.war ubuntu@${TOMCAT_HOST}:/opt/tomcat/webapps/ROOT.war
+                       scp -o StrictHostKeyChecking=no target/devops-demo.war ubuntu@${TOMCAT_HOST}:/opt/tomcat/webapps/ROOT.war
                     '''
                 }
             }
