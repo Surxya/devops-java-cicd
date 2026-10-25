@@ -7,6 +7,7 @@ pipeline {
 
     environment {
         NEXUS_CREDS = credentials('nexus-creds')
+        TOMCAT_HOST = '<tomcat-private-ip>'
     }
 
     stages {
@@ -68,6 +69,26 @@ EOF
             post {
                 always {
                     sh 'rm -f .mvn/settings.xml'
+                }
+            }
+        }
+
+        stage('Deploy to Tomcat') {
+            steps {
+                sshagent(['tomcat-ssh-key']) {
+                    sh '''
+                        mkdir -p ~/.ssh
+                        ssh-keyscan -H ${TOMCAT_HOST} >> ~/.ssh/known_hosts
+
+                        WAR=$(ls target/*.war | head -n 1)
+                        scp "$WAR" ubuntu@${TOMCAT_HOST}:/tmp/ROOT.war
+
+                        ssh ubuntu@${TOMCAT_HOST} '
+                            sudo rm -rf /opt/tomcat/webapps/ROOT /opt/tomcat/webapps/ROOT.war &&
+                            sudo mv /tmp/ROOT.war /opt/tomcat/webapps/ROOT.war &&
+                            sudo chown tomcat:tomcat /opt/tomcat/webapps/ROOT.war
+                        '
+                    '''
                 }
             }
         }
