@@ -4,34 +4,35 @@ An automated continuous integration and continuous deployment (CI/CD) pipeline b
 
 ---
 
-## Architecture Overview
 
+ ## Architecture Overview
 
-                  +-------------------+
-                  |   GitHub (SCM)    |
-                  +---------+---------+
-                            | (Push / Polling)
-                            v
-                  +-------------------+
-                  |      Jenkins      |
-                  +---------+---------+
-                            |
-     +----------------------+----------------------+
-     |                      |                      |
-     v                      v                      v
+```text
+                      +-------------------+
+                      |   GitHub (SCM)    |
+                      +---------+---------+
+                                | (Push / Polling)
+                                v
+                      +-------------------+
+                      |      Jenkins      |
+                      +---------+---------+
+                                |
+         +----------------------+----------------------+
+         |                      |                      |
+         v                      v                      v
 +------------------+  +-------------------+  +-------------------+
 |  Maven Compile   |  |     SonarQube     |  |       Nexus       |
 |  & JaCoCo Tests  |  |   Quality Gate    |  | Snapshot Registry |
 +------------------+  +-------------------+  +-------------------+
-|
-v (SSH / SCP Deploy)
-+-------------------+
-| Apache Tomcat 10  |
-|   (Docker / EC2)  |
-+-------------------+
+                                |
+                                v (SSH / SCP Deploy)
+                      +-------------------+
+                      | Apache Tomcat 10  |
+                      |   (Docker / EC2)  |
+                      +-------------------+
 
+```
 
----
 
 ## Features
 
