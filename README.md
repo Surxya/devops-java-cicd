@@ -7,7 +7,7 @@ An automated continuous integration and continuous deployment (CI/CD) pipeline b
 ## Architecture Overview
 
 
-+-------------------+
+                  +-------------------+
                   |   GitHub (SCM)    |
                   +---------+---------+
                             | (Push / Polling)
@@ -60,16 +60,20 @@ v (SSH / SCP Deploy)
 ## Application Verification & Outputs
 
 ### 1. Automated Pipeline Execution
-![Jenkins Pipeline](docs/screenshots/jenkins-pipeline-success.png)
+<img width="958" height="476" alt="jenkins-pipeline-success" src="https://github.com/user-attachments/assets/016b6e14-925e-4c5e-9fa8-5fee4d6cc841" />
+
 
 ### 2. Application Home Page
-![DevOps Demo App - Home](docs/screenshots/app-v2-home.png)
+<img width="612" height="256" alt="app-v2-home" src="https://github.com/user-attachments/assets/553349ec-a0a1-4c49-a4c6-95630fec531c" />
+
 
 ### 3. Greeting Endpoint (`/hello?name=Surya`)
-![Greeting Endpoint](docs/screenshots/app-hello-endpoint.png)
+<img width="507" height="208" alt="app-hello-endpoint" src="https://github.com/user-attachments/assets/9070e6d9-04fd-4f88-879d-5211094b7e51" />
+
 
 ### 4. Health Check Endpoint (`/health`)
-![Health Check Endpoint](docs/screenshots/app-health-endpoint.png)
+<img width="458" height="224" alt="app-health-endpoint" src="https://github.com/user-attachments/assets/c2e891bf-d2d2-41e3-99cb-a99cf19244e8" />
+
 
 ---
 
