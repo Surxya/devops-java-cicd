@@ -96,7 +96,6 @@ EOF
                         ssh ubuntu@"$TOMCAT_HOST" '
                             sudo rm -rf /opt/tomcat/webapps/ROOT /opt/tomcat/webapps/ROOT.war &&
                             sudo mv /tmp/ROOT.war /opt/tomcat/webapps/ROOT.war &&
-                            sudo chown tomcat:tomcat /opt/tomcat/webapps/ROOT.war
                         '
                     '''
                 }
